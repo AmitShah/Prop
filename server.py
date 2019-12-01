@@ -4,20 +4,39 @@ from tornado.options import define, options, parse_command_line
 import tornado.web
 import nba_api
 import socketio
-
+from tornado.httpclient import AsyncHTTPClient
 
 sio = socketio.AsyncServer(async_mode='tornado')
 
-async def background_task():
-    """Example of how to send server generated events to clients."""
-    count = 0
-    while True:
-        await sio.sleep(10)
-        count += 1
-        await sio.emit('my_response', {'data': 'Server generated event'})
+http_client = AsyncHTTPClient()
+status_counter = {}
 
+URL="https://data.nba.com/data/10s/v2015/json/mobile_teams/nba/2019/scores/pbp/0021900280_full_pbp.json"
+
+#holds the latest play by play state
+GAME_STATE ={}
+
+PROPS=[]
+
+async def refresh_data():
+    while True:
+        
+        await sio.sleep(5)
+        try:
+            response = await http_client.fetch(URL)
+            if(response.code in status_counter):
+                status_counter[response.code] = status_counter[response.code] + 1
+            else:
+                status_counter[response.code] = 1
+            print(response.code)
+        except Exception as e:
+            print("Error: %s" % e)
+        else:
+            print(response.body)
+            print (status_counter)
 
 class MainHandler(tornado.web.RequestHandler):
+
     def get(self):
         self.render("prop/public/index.html")
 
@@ -37,6 +56,7 @@ async def join(sid, message):
     sio.enter_room(sid, message['room'])
     await sio.emit('my_response', {'data': 'Entered room: ' + message['room']},
                    room=sid)
+
 
 @sio.event
 async def leave(sid, message):
@@ -81,12 +101,14 @@ def main():
         [
             (r"/", MainHandler),
             (r"/socket.io/", socketio.get_tornado_handler(sio)),
-            (r"/assets/(.*)",tornado.web.StaticFileHandler, {"path": "frontend/prop/public/assets"},),
+            (r"/assets/(.*)", tornado.web.StaticFileHandler,
+             {"path": "frontend/prop/public/assets"},),
         ],
         template_path=os.path.join(os.path.dirname(__file__), "frontend"),
         static_path=os.path.join(os.path.dirname(__file__), "static"),
-       
+
     )
+    tornado.ioloop.IOLoop.instance().spawn_callback(refresh_data)
     app.listen(8888)
     tornado.ioloop.IOLoop.current().start()
 

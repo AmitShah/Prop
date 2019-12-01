@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import { Canvas, useFrame } from 'react-three-fiber'
 import PropBet from './components/PropBet';
 import LeaderBoard from './components/LeaderBoard';
+import ScoreBoard from './components/ScoreBoard';
 
 function Thing() {
   const ref = useRef()
@@ -45,6 +46,7 @@ function App() {
     </Canvas>
     <PropBet></PropBet>
     <LeaderBoard />
+    <ScoreBoard />
     </div>
   );
 }

@@ -20,3 +20,11 @@
 .App-link {
   color: #09d3ac;
 }
+
+
+.ScoreBoard.Item {
+  padding: 15px;
+  list-style-type: none;
+  margin: 5px 0px 5px 0px;
+  border: 1px solid #e3e3e3;
+}
