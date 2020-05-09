@@ -9,6 +9,7 @@ import socketIOClient from "socket.io-client";
 const endpoint= "localhost:8888"
 const socket = socketIOClient(endpoint);
 socket.on("connection", data => console.log(data));
+socket.on("my_response", data=> alert(JSON.stringify(data)));
 
 ReactDOM.render(<App />, document.getElementById('root'));
 

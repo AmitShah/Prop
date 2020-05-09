@@ -11,7 +11,7 @@ sio = socketio.AsyncServer(async_mode='tornado')
 http_client = AsyncHTTPClient()
 status_counter = {}
 
-URL="https://data.nba.com/data/10s/v2015/json/mobile_teams/nba/2019/scores/pbp/0021900280_full_pbp.json"
+URL="https://data.nba.com/data/10s/v2015/json/mobile_teams/nba/2019/scores/pbp/0021900291_full_pbp.json"
 
 #holds the latest play by play state
 GAME_STATE ={}

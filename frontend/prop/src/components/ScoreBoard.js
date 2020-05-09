@@ -2,6 +2,25 @@ import React from "react";
 import { render } from "react-dom";
 import posed, { PoseGroup } from "react-pose";
 
+const shuffle = array => {
+  var currentIndex = array.length,
+    temporaryValue,
+    randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+};
 
 
 // const Container = styled.div`
@@ -57,7 +76,7 @@ class ScoreBoard extends React.Component {
       id: count,
       text: Math.random().toString()
     });
-    this.setState({ items: items, count: count });
+    //this.setState({ items: items, count: count });
     this.setState({ items: shuffle(this.state.items) });
   };
 
@@ -66,7 +85,7 @@ class ScoreBoard extends React.Component {
   }
 
   componentDidMount() {
-    this.interval = setInterval(this._shuffle, 20000);
+    this.interval = setInterval(this._shuffle, 2000);
 
     // setTimeout(() => {
     //   this.setState({
